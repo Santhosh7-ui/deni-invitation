@@ -550,7 +550,16 @@ body {
   .timeline-year:hover,
   .countdown-number:hover,
   .invite-title:hover,
-  .section-title:hover {
+  .section-title:hover,
+  .word.is-scrolling-glow,
+  .char.is-scrolling-glow,
+  .hero-text.is-scrolling-glow,
+  .story-quote.is-scrolling-glow,
+  .timeline-text.is-scrolling-glow,
+  .timeline-year.is-scrolling-glow,
+  .countdown-number.is-scrolling-glow,
+  .invite-title.is-scrolling-glow,
+  .section-title.is-scrolling-glow {
     text-shadow: 0 0 10px var(--c-gold), 0 0 20px var(--c-gold), 0 0 35px var(--c-gold) !important;
     color: #fff !important;
     cursor: default;

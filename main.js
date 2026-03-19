@@ -641,7 +641,24 @@ gsap.ticker.lagSmoothing(0);
   });
 })();
 
-/* ─── 16. PARTICLE TEXT EFFECT ─────────────────────────────────── */
+/* ─── 17. GLOW ON SCROLL FOR MOBILE ───────────────────────────────── */
+(function initScrollGlow() {
+  const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+  if (isTouch) {
+    const glowElements = document.querySelectorAll('.hero-text, .story-quote, .timeline-text, .timeline-year, .countdown-number, .invite-title, .section-title, .word');
+    glowElements.forEach(el => {
+      ScrollTrigger.create({
+        trigger: el,
+        start: 'top 60%',
+        end: 'bottom 40%',
+        toggleClass: 'is-scrolling-glow'
+      });
+    });
+  }
+})();
+
+/* ─── 18. PARTICLE TEXT EFFECT ─────────────────────────────────── */
 (function initParticleText() {
   const canvas = document.getElementById('particleCanvas');
   if (!canvas) return;
