@@ -641,7 +641,24 @@ gsap.ticker.lagSmoothing(0);
   });
 })();
 
-/* ─── 16. PARTICLE TEXT EFFECT ─────────────────────────────────── */
+/* ─── 17. GLOW ON SCROLL FOR MOBILE ───────────────────────────────── */
+(function initScrollGlow() {
+  const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+  if (isTouch) {
+    const glowElements = document.querySelectorAll('.hero-text, .story-quote, .timeline-text, .timeline-year, .countdown-number, .invite-title, .section-title, .word');
+    glowElements.forEach(el => {
+      ScrollTrigger.create({
+        trigger: el,
+        start: 'top 60%',
+        end: 'bottom 40%',
+        toggleClass: 'is-scrolling-glow'
+      });
+    });
+  }
+})();
+
+/* ─── 18. PARTICLE TEXT EFFECT ─────────────────────────────────── */
 (function initParticleText() {
   const canvas = document.getElementById('particleCanvas');
   if (!canvas) return;
@@ -655,7 +672,7 @@ gsap.ticker.lagSmoothing(0);
   const colors = ['#50b79e', '#77d4c0', '#d4af37', '#e6c875', '#b39ddb', '#ffffff'];
 
   class Particle {
-    constructor(x, y) {
+    constructor(x, y, isPortrait = false) {
       this.baseX = x;
       this.baseY = y;
 
@@ -663,7 +680,8 @@ gsap.ticker.lagSmoothing(0);
       this.x = x + (Math.random() - 0.5) * 80;
       this.y = y + (Math.random() - 0.5) * 80;
 
-      this.size = Math.random() * 1.5 + 0.6;
+      // Make particles larger in portrait to prevent blurriness from browser scaling
+      this.size = Math.random() * (isPortrait ? 2.5 : 1.5) + (isPortrait ? 1.2 : 0.6);
       this.color = colors[Math.floor(Math.random() * colors.length)];
       this.vx = 0;
       this.vy = 0;
@@ -722,11 +740,16 @@ gsap.ticker.lagSmoothing(0);
     canvas.width = width;
     canvas.height = height;
 
-    const isMobile = width < 768;
-    // Calculate a font size that respects 40px minimum padding on each side for mobile.
-    // "Ankitha &" evaluates to about 5-6 full-width characters.
-    const fontSize = isMobile
-      ? Math.min((width - 40) / 5.5, 60)
+    // Because the viewport is forced to 1024, width is always >= 1024.
+    // We determine mobile layout via orientation (height > width)
+    const isPortrait = height > width;
+
+    // Scale up touch radius for portrait mode
+    mouse.radius = isPortrait ? 160 : 100;
+
+    // Use a massive font size for portrait so it looks perfect after the device scales it down
+    const fontSize = isPortrait
+      ? Math.min((width - 150) / 5.5, 160)
       : Math.min(width * 0.09, 110);
 
     const offCanvas = document.createElement('canvas');
@@ -739,7 +762,7 @@ gsap.ticker.lagSmoothing(0);
     offCtx.textAlign = 'center';
     offCtx.textBaseline = 'middle';
 
-    if (isMobile) {
+    if (isPortrait) {
       offCtx.fillText("Ankitha &", width / 2, height / 2 - fontSize * 0.7);
       offCtx.fillText("💍", width / 2, height / 2 + fontSize * 0.1);
       offCtx.fillText("Dinesh", width / 2, height / 2 + fontSize * 0.9);
@@ -750,14 +773,15 @@ gsap.ticker.lagSmoothing(0);
     const textCoordinates = offCtx.getImageData(0, 0, width, height);
     const data = textCoordinates.data;
 
-    const step = width < 768 ? 4 : 3;
+    // Use a much denser step for mobile to eliminate blurriness
+    const step = isPortrait ? 2 : 3;
 
     for (let y = 0; y < height; y += step) {
       for (let x = 0; x < width; x += step) {
         const index = (y * width + x) * 4;
         const alpha = data[index + 3];
         if (alpha > 128) {
-          particles.push(new Particle(x, y));
+          particles.push(new Particle(x, y, isPortrait));
         }
       }
     }
