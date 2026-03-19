@@ -763,11 +763,11 @@ gsap.ticker.lagSmoothing(0);
     offCtx.textBaseline = 'middle';
 
     if (isPortrait) {
-      offCtx.fillText("Ankitha &", width / 2, height / 2 - fontSize * 0.7);
+      offCtx.fillText("Dinesh &", width / 2, height / 2 - fontSize * 0.7);
       offCtx.fillText("💍", width / 2, height / 2 + fontSize * 0.1);
-      offCtx.fillText("Dinesh", width / 2, height / 2 + fontSize * 0.9);
+      offCtx.fillText("Ankitha", width / 2, height / 2 + fontSize * 0.9);
     } else {
-      offCtx.fillText("Ankitha 💍 Dinesh", width / 2, height / 2);
+      offCtx.fillText("Dinesh 💍 Ankitha", width / 2, height / 2);
     }
 
     const textCoordinates = offCtx.getImageData(0, 0, width, height);
